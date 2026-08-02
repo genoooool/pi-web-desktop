@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pi Web</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", sans-serif;
+      background: #fafafa;
+      color: #333;
+      -webkit-font-smoothing: antialiased;
+    }
+    .loader {
+      text-align: center;
+    }
+    .pi-symbol {
+      font-size: 48px;
+      font-weight: 300;
+      color: #222;
+      margin-bottom: 12px;
+      font-family: "Georgia", serif;
+    }
+    .status {
+      font-size: 13px;
+      color: #999;
+    }
+  </style>
+</head>
+<body>
+  <div class="loader">
+    <div class="pi-symbol">π</div>
+    <div class="status">正在启动…</div>
+  </div>
+  <script>
+    (function check() {
+      fetch('http://localhost:30141', { mode: 'no-cors' })
+        .then(function() { window.location.replace('http://localhost:30141'); })
+        .catch(function() { setTimeout(check, 400); });
+    })();
+  </script>
+</body>
+</html>

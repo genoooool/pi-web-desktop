@@ -1,0 +1,32 @@
+{
+  "name": "pi-web-desktop",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Lightweight macOS desktop app wrapper for Pi Web and the Pi coding agent",
+  "scripts": {
+    "tauri": "tauri",
+    "dev": "tauri dev",
+    "build": "tauri build"
+  },
+  "keywords": [
+    "pi",
+    "pi-web",
+    "coding-agent",
+    "desktop-app",
+    "macos",
+    "tauri"
+  ],
+  "author": "geno",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/genoooool/pi-web-desktop.git"
+  },
+  "homepage": "https://github.com/genoooool/pi-web-desktop#readme",
+  "bugs": {
+    "url": "https://github.com/genoooool/pi-web-desktop/issues"
+  },
+  "devDependencies": {
+    "@tauri-apps/cli": "^2"
+  }
+}

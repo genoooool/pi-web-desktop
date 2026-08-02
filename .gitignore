@@ -1,0 +1,12 @@
+# Dependencies and build output
+node_modules/
+src-tauri/target/
+src-tauri/gen/
+
+# Local system files
+.DS_Store
+*.log
+
+# Private development notes
+README.private.md
+对话记录.md
