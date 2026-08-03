@@ -8,6 +8,10 @@
   A lightweight macOS desktop app wrapper for Pi Web and the Pi coding agent, built with Tauri.
 </p>
 
+## Screenshot
+
+![Pi Web Desktop screenshot showing the Pi Web plugin manager](docs/pi-web-desktop.png)
+
 ## What is Pi Web Desktop?
 
 Pi Web Desktop turns the local Pi Web interface into a native macOS application. Open the app to start Pi Web automatically and use it inside a dedicated WKWebView window—no browser tab or terminal command required.
