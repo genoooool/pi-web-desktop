@@ -106,11 +106,63 @@ Check whether Pi Web is listening:
 lsof -nP -i:30141 -sTCP:LISTEN
 ```
 
-Update the upstream Pi Web installation:
+## Updating Pi and Pi Web
+
+This desktop wrapper does not bundle Pi or Pi Web. It launches the globally
+installed Homebrew Node.js copy of Pi Web, which in turn uses Pi. The expected
+packages and paths are:
+
+```text
+Pi:      @earendil-works/pi-coding-agent
+Pi Web:  @agegr/pi-web
+prefix:  /opt/homebrew
+```
+
+Quit Pi Web Desktop before upgrading, then confirm that the active npm uses the
+expected prefix:
 
 ```bash
-npm update -g @agegr/pi-web
+npm config get prefix
+# Expected on this Mac: /opt/homebrew
 ```
+
+Upgrade both packages to their current stable releases. Re-running this command
+is safe: npm updates/reuses the packages in the same global prefix rather than
+creating another installation.
+
+```bash
+npm install -g \
+  @earendil-works/pi-coding-agent@latest \
+  @agegr/pi-web@latest
+```
+
+Verify the installed versions and check whether either package is still
+outdated:
+
+```bash
+pi --version
+npm ls -g \
+  @earendil-works/pi-coding-agent \
+  @agegr/pi-web \
+  --depth=1
+npm outdated -g \
+  @earendil-works/pi-coding-agent \
+  @agegr/pi-web \
+  --depth=0
+```
+
+No output from `npm outdated` means both are current. In the dependency tree,
+Pi shown as `deduped` under Pi Web means both entries reuse the same physical
+installation; it is not a duplicate copy.
+
+> [!WARNING]
+> Do not use `pi-web --version`: Pi Web does not currently implement that
+> option and will start the server on port 30141 instead. Read its version from
+> `npm ls` above. If port 30141 is unexpectedly occupied, identify the listener
+> with `lsof -nP -iTCP:30141 -sTCP:LISTEN` before stopping anything.
+
+Reopen Pi Web Desktop after the upgrade. A desktop-app rebuild is unnecessary
+as long as Node.js and Pi Web remain at the expected `/opt/homebrew` paths.
 
 ## Upstream projects and trademarks
 
