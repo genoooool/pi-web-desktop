@@ -1,6 +1,6 @@
 [package]
 name = "pi-web-app"
-version = "1.0.0"
+version = "1.0.1"
 description = "Pi Web Desktop App"
 authors = ["geno"]
 edition = "2021"

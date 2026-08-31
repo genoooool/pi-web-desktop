@@ -42,7 +42,7 @@ Pi Web Desktop 是一个轻量的 macOS 应用壳：它自动启动本地安装�
 
 ## Download
 
-For Apple Silicon Macs, download the latest DMG installer from the [v1.0.0 GitHub Release](https://github.com/genoooool/pi-web-desktop/releases/download/v1.0.0/Pi.Web_1.0.0_aarch64.dmg), or browse the [Releases page](https://github.com/genoooool/pi-web-desktop/releases).
+For Apple Silicon Macs, download the latest DMG installer from the [v1.0.1 GitHub Release](https://github.com/genoooool/pi-web-desktop/releases/download/v1.0.1/Pi.Web_1.0.1_aarch64.dmg), or browse the [Releases page](https://github.com/genoooool/pi-web-desktop/releases).
 
 The current launcher expects these Homebrew paths:
 
