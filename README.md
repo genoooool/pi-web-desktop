@@ -81,7 +81,7 @@ npm install
 npm run dev
 ```
 
-Pi Web Desktop loads a small startup page while it waits for the local service, then navigates to `http://127.0.0.1:30141`.
+Pi Web Desktop loads a small startup page while the native wrapper waits for the local service, then the wrapper navigates the window to `http://127.0.0.1:30141`.
 
 ## Project structure
 

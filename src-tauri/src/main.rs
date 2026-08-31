@@ -2,16 +2,18 @@
 
 use std::fs::{self, OpenOptions};
 use std::io::Write;
+use std::net::{IpAddr, Ipv4Addr, SocketAddr, TcpStream};
 use std::path::PathBuf;
 use std::process::{Child, Command, Stdio};
 use std::sync::atomic::{AtomicBool, Ordering};
 use std::sync::{Arc, Mutex};
 use std::time::{Duration, SystemTime, UNIX_EPOCH};
-use tauri::Manager;
+use tauri::{Manager, Url};
 
 const PORT: u16 = 30141;
 const PI_WEB_SCRIPT: &str = "/opt/homebrew/lib/node_modules/@agegr/pi-web/bin/pi-web.js";
 const NODE_BIN: &str = "/opt/homebrew/bin/node";
+const PI_WEB_URL: &str = "http://127.0.0.1:30141";
 
 struct ServerState {
     child: Mutex<Option<Child>>,
@@ -26,7 +28,11 @@ fn log_path() -> PathBuf {
 }
 
 fn log_line(msg: &str) {
-    if let Ok(mut f) = OpenOptions::new().create(true).append(true).open(log_path()) {
+    if let Ok(mut f) = OpenOptions::new()
+        .create(true)
+        .append(true)
+        .open(log_path())
+    {
         let ts = SystemTime::now()
             .duration_since(UNIX_EPOCH)
             .map(|d| d.as_secs())
@@ -55,7 +61,10 @@ fn free_port() {
             })
             .unwrap_or(false);
         if is_pi_web {
-            log_line(&format!("killing stale process on port {}: pid {}", PORT, pid));
+            log_line(&format!(
+                "killing stale process on port {}: pid {}",
+                PORT, pid
+            ));
             let _ = Command::new("kill").args(["-9", pid]).output();
         }
     }
@@ -63,7 +72,11 @@ fn free_port() {
 
 fn spawn_server() -> Option<Child> {
     free_port();
-    let log = OpenOptions::new().create(true).append(true).open(log_path()).ok()?;
+    let log = OpenOptions::new()
+        .create(true)
+        .append(true)
+        .open(log_path())
+        .ok()?;
     let log_err = log.try_clone().ok()?;
     match Command::new(NODE_BIN)
         .arg(PI_WEB_SCRIPT)
@@ -84,6 +97,31 @@ fn spawn_server() -> Option<Child> {
             None
         }
     }
+}
+
+fn navigate_when_ready(app_handle: tauri::AppHandle) {
+    std::thread::spawn(move || {
+        let address = SocketAddr::new(IpAddr::V4(Ipv4Addr::LOCALHOST), PORT);
+
+        for _ in 0..150 {
+            if TcpStream::connect_timeout(&address, Duration::from_millis(100)).is_ok() {
+                let Some(window) = app_handle.get_webview_window("main") else {
+                    log_line("main window missing; cannot navigate to pi-web");
+                    return;
+                };
+                let url = Url::parse(PI_WEB_URL).expect("PI_WEB_URL must be valid");
+                match window.navigate(url) {
+                    Ok(()) => log_line(&format!("navigating main window to {}", PI_WEB_URL)),
+                    Err(e) => log_line(&format!("failed to navigate to pi-web: {}", e)),
+                }
+                return;
+            }
+
+            std::thread::sleep(Duration::from_millis(100));
+        }
+
+        log_line("pi-web did not become ready within 15 seconds");
+    });
 }
 
 fn main() {
@@ -123,6 +161,7 @@ fn main() {
             let child = spawn_server().expect("failed to start pi-web");
             *app_state.child.lock().unwrap() = Some(child);
             app.manage(app_state.clone());
+            navigate_when_ready(app.handle().clone());
             Ok(())
         })
         .build(tauri::generate_context!())

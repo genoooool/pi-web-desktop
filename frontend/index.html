@@ -37,12 +37,5 @@
     <div class="pi-symbol">π</div>
     <div class="status">正在启动…</div>
   </div>
-  <script>
-    (function check() {
-      fetch('http://localhost:30141', { mode: 'no-cors' })
-        .then(function() { window.location.replace('http://localhost:30141'); })
-        .catch(function() { setTimeout(check, 400); });
-    })();
-  </script>
 </body>
 </html>
